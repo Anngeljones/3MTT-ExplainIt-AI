@@ -1,0 +1,142 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f4f7f6;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Align to top */
+    min-height: 100vh;
+}
+
+.container {
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    width: 100%;
+    margin-top: 30px; /* Space from top */
+}
+
+h1 {
+    color: #007bff; /* A nice blue for branding */
+    text-align: center;
+    margin-bottom: 10px;
+    font-size: 2.5em;
+}
+
+.tagline {
+    text-align: center;
+    color: #666;
+    margin-bottom: 30px;
+    font-size: 1.1em;
+}
+
+.input-section {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+textarea, input[type="text"] {
+    width: 100%;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1em;
+    font-family: inherit;
+    resize: vertical; /* Allow vertical resizing for textarea */
+}
+
+textarea {
+    min-height: 150px; /* Good default height */
+}
+
+button {
+    background-color: #007bff;
+    color: #fff;
+    padding: 15px 25px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+    transform: translateY(-2px); /* Slight lift effect */
+}
+
+.output-section {
+    margin-top: 30px;
+    border-top: 1px solid #eee; /* Separator line */
+    padding-top: 30px;
+}
+
+.output-section h2 {
+    color: #007bff;
+    margin-bottom: 20px;
+    font-size: 1.8em;
+}
+
+#outputContent {
+    background-color: #e9f5ff; /* Light blue background for output */
+    padding: 20px;
+    border-radius: 8px;
+    min-height: 100px;
+    color: #333;
+    white-space: pre-wrap; /* Preserves newlines and wraps text */
+    word-wrap: break-word; /* Breaks long words */
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05); /* Subtle inner shadow */
+}
+
+#outputContent p {
+    margin: 0;
+}
+
+footer {
+    text-align: center;
+    margin-top: 40px;
+    color: #888;
+    font-size: 0.9em;
+}
+
+/* Basic Responsiveness for smaller screens */
+@media (max-width: 768px) {
+    .container {
+        padding: 25px;
+        margin-top: 20px;
+    }
+    h1 {
+        font-size: 2em;
+    }
+    .tagline {
+        font-size: 1em;
+    }
+    button {
+        font-size: 1em;
+        padding: 12px 20px;
+    }
+    #outputContent {
+        min-height: 80px;
+        padding: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 10px;
+    }
+    .container {
+        padding: 15px;
+    }
+    h1 {
+        font-size: 1.8em;
+    }
+}
