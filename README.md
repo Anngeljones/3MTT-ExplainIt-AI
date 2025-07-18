@@ -33,7 +33,7 @@ This is a simple web application designed to help 3MTT fellows and other beginne
 
 ## Live Demo
 You can see a live demo of this project here:
-[https://YOUR_USERNAME.github.io/3MTT-ExplainIt-AI/](https://Anngeljones.github.io/3MTT-ExplainIt-AI/)
+(https://Anngeljones.github.io/3MTT-ExplainIt-AI/)
 
 ## Author
 [Angel Jones/Anngeljones]
