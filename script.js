@@ -22,7 +22,7 @@ explainButton.addEventListener('click', async () => {
     explainButton.disabled = true;
 
     // Construct the prompt that we will send to the AI
-    let prompt = `You are a helpful AI assistant specialized in simplifying technical documentation and explaining complex concepts for beginners, especially those learning new tech skills like 3MTT fellows.
+    let prompt = `You are a helpful AI assistant specialized in simplifying technical documentation and explaining complex concepts for beginners and  tech fellows.
 
     Given the following technical text:
     "${text}"
@@ -128,3 +128,4 @@ explainButton.addEventListener('click', async () => {
         explainButton.disabled = false;
     }
 });
+
