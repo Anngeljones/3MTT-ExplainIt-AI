@@ -1,4 +1,4 @@
-const API_KEY="AIzaSyDY2EXIJQe5rgY6ICDHu0nPwFdqlgESsXk";
+const API_KEY="AIzaSyDZwNV75iUQtjPh80tMnNXj0ZZoSlIMCGE";
 
 // Get references to our HTML elements
 const explainButton = document.getElementById('explainButton');
@@ -86,5 +86,6 @@ explainButton.addEventListener('click', async () => {
         explainButton.disabled = false;
     }
 });
+
 
 
