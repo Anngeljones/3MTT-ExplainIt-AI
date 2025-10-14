@@ -110,16 +110,28 @@ explainButton.addEventListener('click', async () => {
         // CRITICAL FIX: Changed 'data' to 'result'
         const aiResponse = result.candidates[0].content.parts[0].text;
 
-        // Basic formatting for the output to make it readable in HTML
-        let formattedResponse = aiResponse.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>'); // Convert **text** to <strong>text</strong>
-        formattedResponse = formattedResponse.replace(/^###\s*)/gm, '<h3>$1</h3>');
-        formattedResponse = formattedResponse.replace(/\n/g, '<br>'); // Convert newlines to HTML line breaks
-        // Simple regex to look for list items (like * or -) and wrap them
-        formattedResponse = formattedResponse.replace(/^[\*-] (.*)/gm, '<li>$1</li>');
+         // Basic formatting for the output to make it readable in HTML
+        let formattedResponse = aiResponse;
+
+        // 1. Convert ALL Markdown Headings (#, ##, ###, etc.) to <h3>
+        // This regex looks for 1 to 6 hash symbols at the start of a line and converts them to <h3>
+        formattedResponse = formattedResponse.replace(/^[#]{1,6}\s*(.*)/gm, '<h3>$1</h3>');
+
+        // 2. Convert **bold text** to <strong>text</strong>
+        formattedResponse = formattedResponse.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>'); 
+        
+        // 3. Convert markdown lists (* item or - item) to <li> within a temporary <ul> container
+        // This is a complex way to handle lists correctly, but it is necessary for proper formatting.
+        formattedResponse = formattedResponse.replace(/^(?:[*-]\s+)(.*)/gm, '<li>$1</li>');
+        
+        // 4. Wrap the list items (<li>) that are next to each other in <ul> tags.
+        formattedResponse = formattedResponse.replace(/((?:<li>.*?<\/li>)+)/gs, '<ul>$1</ul>');
+        
+        // 5. Convert newlines (\n) to HTML line breaks (<br>) only if they aren't near a list or block element.
+        formattedResponse = formattedResponse.replace(/\n(?!<br>|<h3>|<ul>)/g, '<br>');
 
         // Display the formatted AI response
         outputContent.innerHTML = `<div class="p-4 bg-gray-50 rounded-lg">${formattedResponse}</div>`
-
     } catch (error) {
         // Catch any network or other unexpected errors
         console.error('Fetch error:', error);
@@ -129,5 +141,6 @@ explainButton.addEventListener('click', async () => {
         explainButton.disabled = false;
     }
 });
+
 
 
