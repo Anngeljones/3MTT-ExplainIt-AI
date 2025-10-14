@@ -58,14 +58,49 @@ explainButton.addEventListener('click', async () => {
         });
 
         // Check if the API call was successful (status code 200-299)
-        if (!response.ok) {
-            const errorData = await response.json(); // Get error details from the API
-            console.error('API Error:', errorData); // Log the error for debugging
-            outputContent.innerHTML = `<p style='color: red;'>Error: ${errorData.error.message || 'Could not get explanation. Please try again.'}</p>`;
+       if (!response.ok) {
+        // FIX: Read the response body as plain text first.
+        const rawErrorText = await response.text();
+       
+        let errorMessage = `API Request failed with status ${response.status}.`;
+        let details = '';
+
+        // Try to parse the text as JSON, in case it's a valid JSON error object
+        try {
+            const errorData = JSON.parse(rawErrorText);
+            // Check for the standard Google API error structure
+            if (errorData.error && errorData.error.message) {
+                details = errorData.error.message;
+            } else {
+                // Use the entire parsed object if structure is unexpected
+                details = JSON.stringify(errorData);
+            }
+            errorMessage = `Error ${response.status}: ${details}`;
+        } catch (e) {
+            // If JSON parsing fails (for empty body or plain text errors), use the raw text
+            details = rawErrorText.substring(0, 500) || "The server returned an empty response body.";
+            errorMessage = `Error ${response.status}: Could not parse error details. ${details}...`;
+        }
+       
+        console.error("API Fetch Error:", errorMessage);
+       
+        // Use an enhanced alert to inform the user of the core problem
+        document.getElementById('output-content').innerHTML = `
+            <div class="p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+                <p class="font-bold text-lg">🚫 API Connection Failed</p>
+                <p class="mt-1"><strong>Status:</strong> ${response.status}</p>
+                <p class="mt-1"><strong>Details:</strong> ${details}</p>
+                <p class="mt-3 text-sm font-semibold">
+                    Action: The most common cause for a 403 Forbidden error is that the API key
+                    is not restricted to the correct domain. Please check your key's
+                    <a href="https://console.cloud.google.com/apis/credentials" target="_blank" class="underline text-red-800">HTTP referrer restrictions</a>
+                    and ensure they include <code>file:///*</code> and <code>http://localhost/*</code>.
+                </p>
+            </div>
             return; // Stop here
      }
         // Parse the JSON response from the AI
-        const data = await response.json();
+        const result = await response.json();
         // Extract the AI's generated text
         const aiResponse = data.candidates[0].content.parts[0].text;
 
@@ -86,6 +121,7 @@ explainButton.addEventListener('click', async () => {
         explainButton.disabled = false;
     }
 });
+
 
 
 
