@@ -112,6 +112,7 @@ explainButton.addEventListener('click', async () => {
 
         // Basic formatting for the output to make it readable in HTML
         let formattedResponse = aiResponse.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>'); // Convert **text** to <strong>text</strong>
+        formattedResponse = formattedResponse.replace(/^###\s*)/gm, '<h3>$1</h3>');
         formattedResponse = formattedResponse.replace(/\n/g, '<br>'); // Convert newlines to HTML line breaks
         // Simple regex to look for list items (like * or -) and wrap them
         formattedResponse = formattedResponse.replace(/^[\*-] (.*)/gm, '<li>$1</li>');
@@ -128,4 +129,5 @@ explainButton.addEventListener('click', async () => {
         explainButton.disabled = false;
     }
 });
+
 
