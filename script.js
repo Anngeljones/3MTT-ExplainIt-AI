@@ -22,7 +22,6 @@ explainButton.addEventListener('click', async () => {
     explainButton.disabled = true;
 
     // Construct the prompt that we will send to the AI
-    // This tells the AI what role it should play and what to do with the text
     let prompt = `You are a helpful AI assistant specialized in simplifying technical documentation and explaining complex concepts for beginners, especially those learning new tech skills like 3MTT fellows.
 
     Given the following technical text:
@@ -57,72 +56,75 @@ explainButton.addEventListener('click', async () => {
             })
         });
 
-        // Check if the API call was successful (status code 200-299)
-       if (!response.ok) {
-        // FIX: Read the response body as plain text first.
-        const rawErrorText = await response.text();
-       
-        let errorMessage = `API Request failed with status ${response.status}.`;
-        let details = '';
+        // Line 61: Check if the API call was unsuccessful (status code 4xx or 5xx)
+        // CRITICAL FIX: Changed 'response' to 'geminiRes'
+        if (!geminiRes.ok) {
+            // Read the response body as plain text first.
+            const rawErrorText = await geminiRes.text();
+          
+            let errorMessage = `API Request failed with status ${geminiRes.status}.`;
+            let details = '';
 
-        // Try to parse the text as JSON, in case it's a valid JSON error object
-        try {
-            const errorData = JSON.parse(rawErrorText);
-            // Check for the standard Google API error structure
-            if (errorData.error && errorData.error.message) {
-                details = errorData.error.message;
-            } else {
-                // Use the entire parsed object if structure is unexpected
-                details = JSON.stringify(errorData);
+            // Try to parse the text as JSON, in case it's a valid JSON error object
+            try {
+                const errorData = JSON.parse(rawErrorText);
+                // Check for the standard Google API error structure
+                if (errorData.error && errorData.error.message) {
+                    details = errorData.error.message;
+                } else {
+                    // Use the entire parsed object if structure is unexpected
+                    details = JSON.stringify(errorData);
+                }
+                errorMessage = `Error ${geminiRes.status}: ${details}`;
+            } catch (e) {
+                // If JSON parsing fails (for empty body or plain text errors), use the raw text
+                details = rawErrorText.substring(0, 500) || "The server returned an empty response body.";
+                errorMessage = `Error ${geminiRes.status}: Could not parse error details. ${details}...`;
             }
-            errorMessage = `Error ${response.status}: ${details}`;
-        } catch (e) {
-            // If JSON parsing fails (for empty body or plain text errors), use the raw text
-            details = rawErrorText.substring(0, 500) || "The server returned an empty response body.";
-            errorMessage = `Error ${response.status}: Could not parse error details. ${details}...`;
+          
+            console.error("API Fetch Error:", errorMessage);
+          
+            // Use an enhanced alert to inform the user of the core problem
+            outputContent.innerHTML = `
+                <div class="p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+                    <p class="font-bold text-lg">🚫 API Connection Failed</p>
+                    <p class="mt-1"><strong>Status:</strong> ${geminiRes.status}</p>
+                    <p class="mt-1"><strong>Details:</strong> ${details}</p>
+                    <p class="mt-3 text-sm font-semibold">
+                        Action: The most common cause for a 403 Forbidden error is that the API key
+                        is not restricted to the correct domain. Please check your key's
+                        <a href="https://console.cloud.google.com/apis/credentials" target="_blank" class="underline text-red-800">HTTP referrer restrictions</a>
+                        and ensure they include <code>file:///*</code> and <code>http://localhost/*</code>.
+                    </p>
+                </div>
+            `;
+            // CRITICAL FIX: Moved return statement out of the template literal
+            return; // Stop execution here if there was an error
         }
-       
-        console.error("API Fetch Error:", errorMessage);
-       
-        // Use an enhanced alert to inform the user of the core problem
-        document.getElementById('output-content').innerHTML = `
-            <div class="p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg">
-                <p class="font-bold text-lg">🚫 API Connection Failed</p>
-                <p class="mt-1"><strong>Status:</strong> ${response.status}</p>
-                <p class="mt-1"><strong>Details:</strong> ${details}</p>
-                <p class="mt-3 text-sm font-semibold">
-                    Action: The most common cause for a 403 Forbidden error is that the API key
-                    is not restricted to the correct domain. Please check your key's
-                    <a href="https://console.cloud.google.com/apis/credentials" target="_blank" class="underline text-red-800">HTTP referrer restrictions</a>
-                    and ensure they include <code>file:///*</code> and <code>http://localhost/*</code>.
-                </p>
-            </div>
-            return; // Stop here
-     }
+
         // Parse the JSON response from the AI
-        const result = await response.json();
+        // CRITICAL FIX: Changed 'response.json()' to 'geminiRes.json()'
+        const result = await geminiRes.json();
+       
         // Extract the AI's generated text
-        const aiResponse = data.candidates[0].content.parts[0].text;
+        // CRITICAL FIX: Changed 'data' to 'result'
+        const aiResponse = result.candidates[0].content.parts[0].text;
 
         // Basic formatting for the output to make it readable in HTML
         let formattedResponse = aiResponse.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>'); // Convert **text** to <strong>text</strong>
         formattedResponse = formattedResponse.replace(/\n/g, '<br>'); // Convert newlines to HTML line breaks
-        formattedResponse = formattedResponse.replace(/^- (.*)/gm, '<li>$1</li>'); // Convert markdown list items to HTML list items (simple)
+        // Simple regex to look for list items (like * or -) and wrap them
+        formattedResponse = formattedResponse.replace(/^[\*-] (.*)/gm, '<li>$1</li>');
 
         // Display the formatted AI response
-        outputContent.innerHTML = `<p>${formattedResponse}</p>`
+        outputContent.innerHTML = `<div class="p-4 bg-gray-50 rounded-lg">${formattedResponse}</div>`
 
     } catch (error) {
         // Catch any network or other unexpected errors
         console.error('Fetch error:', error);
-        outputContent.innerHTML = "<p style='color: red;'>An error occurred. Please check your API key or network connection..</p>";
+        outputContent.innerHTML = "<p style='color: red;'>An unexpected error occurred. Please check your network connection or console for details.</p>";
     } finally {
         // Always re-enable the button once processing is done (or an error occurs)
         explainButton.disabled = false;
     }
 });
-
-
-
-
-
