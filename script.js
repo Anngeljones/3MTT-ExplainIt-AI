@@ -45,7 +45,7 @@ explainButton.addEventListener('click', async () => {
 
     try {
         // Make the API call to Google Gemini
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`, {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${API_KEY}`, {
             method: 'POST', // We are sending data, so it's a POST request
             headers: {
                 'Content-Type': 'application/json', // We are sending JSON data
@@ -86,3 +86,4 @@ explainButton.addEventListener('click', async () => {
         explainButton.disabled = false;
     }
 });
+
