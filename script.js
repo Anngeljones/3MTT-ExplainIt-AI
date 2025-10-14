@@ -110,7 +110,7 @@ explainButton.addEventListener('click', async () => {
         formattedResponse = formattedResponse.replace(/^- (.*)/gm, '<li>$1</li>'); // Convert markdown list items to HTML list items (simple)
 
         // Display the formatted AI response
-        outputContent.innerHTML = `<p>${formattedResponse}</p>`;
+        outputContent.innerHTML = `<p>${formattedResponse}</p>`
 
     } catch (error) {
         // Catch any network or other unexpected errors
@@ -121,6 +121,7 @@ explainButton.addEventListener('click', async () => {
         explainButton.disabled = false;
     }
 });
+
 
 
 
