@@ -1,7 +1,7 @@
-# 3MTT ExplainIt AI
+# ExplainIt AI
 
 ## Project Description
-This is a simple web application designed to help 3MTT fellows and other beginners understand complex technical documentation and jargon. It leverages the Google Gemini AI to provide simplified summaries and explanations of technical terms.
+This is a simple web application designed to help tech fellows and other beginners understand complex technical documentation and jargon. It leverages the Google Gemini AI to provide simplified summaries and explanations of technical terms.
 
 ## Features
 - **AI-Powered Explanations:** Utilizes Google Gemini's capabilities to simplify complex text.
