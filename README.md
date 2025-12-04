@@ -36,4 +36,4 @@ You can see a live demo of this project here:
 (https://Anngeljones.github.io/3MTT-ExplainIt-AI/)
 
 ## Author
-[Angel Jones/Anngeljones]
+Angel Jones/Anngeljones
